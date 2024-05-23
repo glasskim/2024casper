@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>로그인 폼</title>
+  <style>
+    fieldset{
+      width:100%;
+      height: 100vh;
+      text-align: center;
+      border:none;
+      background-color: #ced0e0;
+    }
+    legend{
+      display: none;
+    }
+    .id_txt, .pw_txt {
+      display: none;
+    }
+    #id_txt, #pw_txt{
+      width:300px;
+      height:50px;
+      border:none;
+      box-shadow: 0 0 3px #999;
+    }
+    #login_btn{
+      width:300px;
+      height:50px;
+      background-color: #2135ce;
+      color:#fff;
+      border:none;
+      box-shadow: 0 0 3px #999;
+    }
+    .p_txt > a{
+      width:100px;
+      text-decoration: none;
+      color:#333;
+      font-size: 13px;
+      display: inline-block;
+      justify-content: space-around;
+      border-right: 1px solid #333;
+      text-align: center;
+    }
+    .p_txt > a:last-child{
+      border-right:none;
+    }
+    .id_saveas{
+      font-size:14px;
+    }
+  </style>
+</head>
+<body>
+  <form name="login">
+    <fieldset>
+      <legend>로그인 폼</legend>
+      <p>
+        <label for="id_txt" class="id_txt">ID : </label>
+        <input type="text" maxlength="16" id="id_txt" name="id_txt" placeholder="아이디 입력해주세요." autocomplete="off">
+      </p>
+      <p>
+        <label for="pw_txt" class="pw_txt">PW : </label>
+        <input type="password" maxlength="16" id="pw_txt" name="pw_txt" placeholder="비밀번호 입력해주세요." autocomplete="off">
+      </p>
+      <p class="id_saveas">
+        <input type="checkbox" id="id_save"><label for="id_save">아이디 저장</label>
+      </p>
+      <p><input type="submit" value="로그인" id="login_btn"></p>
+      <p class="p_txt">
+        <a href="#" title="아이디찾기">아이디찾기</a>
+        <a href="#" title="비밀번호찾기">비밀번호찾기</a>
+        <a href="#" title="회원가입">회원가입</a>
+      </p>
+    </fieldset>
+  </form>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+  <script>
+    $(document).ready(function(){
+      let key = getCookie('idChk'); //쿠키이름 저장
+    
+      if(key!=""){//만약에 key변수에 값이 있다면
+        $('#id_txt').val(key); //id값을 저장
+      }
+
+      if($('#id_txt').val()!=""){//만약에 id값이 있다면
+        $('#id_save').attr('checked', true); //체크박스에 체크를 해둔다.
+      }
+
+      $('#id_save').change(function(){//체크박스의 상태가 변경되면 아래내용 실행
+        if($('#id_save').is(':checked')){ //체크박스에 체크가 된경우라면
+          setCookie('idChk',$('#id_txt').val(), 7); //쿠기 생성
+        }else{ 
+          deleteCookie('idChk');
+        }
+      });
+      $('#id_txt').keyup(function(){
+        if($('#id_save').is(':checked')){
+          setCookie('idChk', $('#id_txt').val(),7);
+        }
+      });
+    });
+  
+    function setCookie(cookieName, value, exdays){
+        var exdate = new Date();
+        exdate.setDate(exdate.getDate() + exdays);
+        var cookieValue = escape(value) + ((exdays==null) ? "" : "; expires=" + exdate.toGMTString());
+        document.cookie = cookieName + "=" + cookieValue;
+    }
+    
+    function deleteCookie(cookieName){
+      var expireDate = new Date();
+      expireDate.setDate(expireDate.getDate() - 1);
+      document.cookie = cookieName + "= " + "; expires=" + expireDate.toGMTString();
+    }
+      
+    function getCookie(cookieName) {
+      cookieName = cookieName + '=';
+      var cookieData = document.cookie;
+      var start = cookieData.indexOf(cookieName);
+      var cookieValue = '';
+      if(start != -1){
+        start += cookieName.length;
+        var end = cookieData.indexOf(';', start);
+        if(end == -1)end = cookieData.length;
+        cookieValue = cookieData.substring(start, end);
+      }
+      return unescape(cookieValue);
+    }
+  </script>
+
+
+</body>
+</html>
